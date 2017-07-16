@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace LinglingCai
@@ -163,10 +160,17 @@ namespace LinglingCai
         {
             int s = path.LastIndexOf('\\') + 1;
             int e = path.LastIndexOf('.');
+            string name;
             if (e < 0)
-                return path.Substring(s);
+                name = path.Substring(s);
             else
-                return path.Substring(s, e - s);
+                name = path.Substring(s, e - s);
+
+            char c = name[name.Length - 1];
+            if (Char.IsDigit(c))
+                name = name.Substring(0, name.Length - 1);
+
+            return name;
         }
         private static List<string> LoadFiles(string repository)
         {
@@ -180,17 +184,11 @@ namespace LinglingCai
             foreach (string path in all)
             {
                 string name = GetName(path);
-                char c = name.Last();
-                string type;
-                if (Char.IsDigit(c))
-                    type = name.Substring(0, name.Length - 1);
-                else
-                    type = name;
 
-                if (visited.ContainsKey(type))
+                if (visited.ContainsKey(name))
                     continue;
 
-                visited.Add(type, true);
+                visited.Add(name, true);
                 result.Add(path);
             }
 
